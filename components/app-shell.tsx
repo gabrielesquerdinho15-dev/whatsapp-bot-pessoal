@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/app/auth/actions";
 import { AuthUser } from "@/lib/auth";
@@ -11,7 +12,7 @@ const links = [
   { href: "/leads", label: "Leads" },
   { href: "/flows", label: "Fluxos" },
   { href: "/templates", label: "Templates" }
-];
+] as const satisfies ReadonlyArray<{ href: Route; label: string }>;
 
 export function AppShell({
   title,
