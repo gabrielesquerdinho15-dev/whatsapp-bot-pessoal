@@ -1,14 +1,10 @@
-import { createClient } from "./supabase/server";
-import { AutomationConfig } from "../types/app";
 import { createAdminClient } from "./supabase/admin";
+import { AutomationConfig } from "../types/app";
 
-async function loadAutomation(
-  supabase: Awaited<ReturnType<typeof createClient>> | ReturnType<typeof createAdminClient>,
-  profileId: string
-): Promise<AutomationConfig | null> {
-  const typedClient = supabase;
+export async function getAutomationAdmin(profileId: string): Promise<AutomationConfig | null> {
+  const supabase = createAdminClient();
 
-  const { data: automation, error } = await typedClient
+  const { data: automation, error } = await supabase
     .from("automation_settings")
     .select("id, name, welcome_message, initial_delay_minutes, is_active")
     .eq("profile_id", profileId)
@@ -21,7 +17,7 @@ async function loadAutomation(
     return null;
   }
 
-  const { data: steps, error: stepsError } = await typedClient
+  const { data: steps, error: stepsError } = await supabase
     .from("automation_steps")
     .select("id, step_order, step_type, title, content")
     .eq("automation_id", automation.id)
@@ -45,14 +41,4 @@ async function loadAutomation(
       content: step.content ? String(step.content) : ""
     }))
   };
-}
-
-export async function getAutomation(profileId: string): Promise<AutomationConfig | null> {
-  const supabase = await createClient();
-  return loadAutomation(supabase, profileId);
-}
-
-export async function getAutomationAdmin(profileId: string): Promise<AutomationConfig | null> {
-  const supabase = createAdminClient();
-  return loadAutomation(supabase, profileId);
 }

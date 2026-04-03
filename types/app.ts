@@ -44,6 +44,7 @@ export interface AutomationConfig {
   id: string;
   name: string;
   welcomeMessage: string;
+  initialDelayMinutes: number;
   isActive: boolean;
   steps: AutomationStep[];
 }

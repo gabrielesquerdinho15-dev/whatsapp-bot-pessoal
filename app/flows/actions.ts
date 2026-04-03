@@ -22,6 +22,7 @@ export async function saveAutomationAction(formData: FormData) {
   }
 
   const name = String(formData.get("name") ?? "Automacao principal").trim() || "Automacao principal";
+  const initialDelayMinutes = Math.max(0, Number(formData.get("initialDelayMinutes") ?? 0) || 0);
   const welcomeMessage = String(formData.get("welcomeMessage") ?? "").trim();
   const questionName = String(formData.get("questionName") ?? "").trim();
   const questionInterest = String(formData.get("questionInterest") ?? "").trim();
@@ -58,6 +59,7 @@ export async function saveAutomationAction(formData: FormData) {
       .update({
         name,
         welcome_message: welcomeMessage,
+        initial_delay_minutes: initialDelayMinutes,
         is_active: true
       })
       .eq("id", automationId)
@@ -75,6 +77,7 @@ export async function saveAutomationAction(formData: FormData) {
         profile_id: user.id,
         name,
         welcome_message: welcomeMessage,
+        initial_delay_minutes: initialDelayMinutes,
         is_active: true
       })
       .select("id")

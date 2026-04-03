@@ -23,6 +23,7 @@ export default async function FlowsPage() {
 
   const steps = automation?.steps ?? [];
   const automationName = automation?.name ?? "Automacao principal";
+  const initialDelayMinutes = automation?.initialDelayMinutes ?? 0;
   const welcomeStep = getStep(
     steps,
     1,
@@ -56,6 +57,11 @@ export default async function FlowsPage() {
             <label className="field">
               <span>Nome da automacao</span>
               <input defaultValue={automationName} name="name" />
+            </label>
+
+            <label className="field">
+              <span>Esperar quantos minutos antes da primeira mensagem</span>
+              <input defaultValue={initialDelayMinutes} min={0} name="initialDelayMinutes" type="number" />
             </label>
 
             <label className="field">
@@ -118,6 +124,9 @@ export default async function FlowsPage() {
           <div className="section-header">
             <h2>Resumo do fluxo</h2>
           </div>
+          <p className="subtle" style={{ marginTop: 0 }}>
+            Primeira mensagem enviada {initialDelayMinutes === 0 ? "imediatamente" : `${initialDelayMinutes} minuto(s) depois`}.
+          </p>
           <div className="steps">
             {[
               { order: 1, title: welcomeStep.title, content: welcomeStep.content, type: "message" },

@@ -20,8 +20,10 @@ create table if not exists conversations (
   lead_id uuid references leads(id) on delete set null,
   stage text not null default 'entrada',
   manual_mode boolean not null default false,
+  initial_response_sent boolean not null default false,
   owner text not null default 'bot' check (owner in ('bot', 'voce')),
   last_message text,
+  scheduled_reply_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -47,9 +49,14 @@ create table if not exists automation_settings (
   template_id uuid references automation_templates(id) on delete set null,
   name text not null default 'Automacao principal',
   welcome_message text,
+  initial_delay_minutes int not null default 0,
   is_active boolean not null default true,
   created_at timestamptz not null default now()
 );
+
+alter table if exists conversations add column if not exists initial_response_sent boolean not null default false;
+alter table if exists conversations add column if not exists scheduled_reply_at timestamptz;
+alter table if exists automation_settings add column if not exists initial_delay_minutes int not null default 0;
 
 create table if not exists automation_steps (
   id uuid primary key default gen_random_uuid(),
